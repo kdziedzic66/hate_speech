@@ -7,6 +7,7 @@ from utils.constants import BERT_PRETRAINED_ID, NUM_HATE_CLASSES
 
 class BertClassifier(nn.Module):
     def __init__(self):
+        super(BertClassifier, self).__init__()
         self.bert = BertModel.from_pretrained(BERT_PRETRAINED_ID, return_dict=True)
         self.classifier = nn.Linear(self.bert.config.hidden_size, NUM_HATE_CLASSES)
 
