@@ -1,4 +1,4 @@
-BERT_PRETRAINED_ID = "dkleczek/bert-base-polish-cased-v1"
+POLBERT_PRETRAINED_ID = "dkleczek/bert-base-polish-cased-v1"
 NUM_HATE_CLASSES = 3
 
 
