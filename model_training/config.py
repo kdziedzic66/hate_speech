@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
-
 from typing import List
 
 
 @dataclass(repr=False)
 class _OptimizationSchedule:
     optimizer_name: str = "adam"
-    init_lr: float = 1e-3
+    init_lr: float = 1e-4
     gamma: float = 1e-1
     weight_decay: float = 0
     milestones: List[float] = field(default_factory=lambda: [0.4, 0.7, 0.9])
@@ -23,4 +22,6 @@ class _OptimizationSchedule:
 class TrainConfig:
     batch_size: int
     num_epochs: int
-    optimization_schedule: _OptimizationSchedule = field(default_factory=_OptimizationSchedule)
+    optimization_schedule: _OptimizationSchedule = field(
+        default_factory=_OptimizationSchedule
+    )

@@ -2,17 +2,20 @@ from typing import Dict
 
 import torch
 import torch.nn as nn
-import utils.pytorch as pt_utils
+from sklearn.metrics import classification_report
+from tqdm import tqdm
 
+import utils.pytorch as pt_utils
 from model_training.config import TrainConfig
 
 
 class Trainer:
-
     def __init__(self, train_config: TrainConfig):
         self.train_config = train_config
 
-    def train(self, nn_module: nn.Module, dataloaders: Dict[str, torch.utils.data.DataLoader]):
+    def train(
+        self, nn_module: nn.Module, dataloaders: Dict[str, torch.utils.data.DataLoader]
+    ):
         assert "train" in dataloaders, "No train dataset specified!"
         assert "valid" in dataloaders, "No valid dataset specified!"
 
@@ -27,7 +30,7 @@ class Trainer:
             optimizer=optimizer,
             num_iterations=len(dataloaders["train"]) * self.train_config.num_epochs,
             gamma=self.train_config.optimization_schedule.gamma,
-            milestones=self.train_config.optimization_schedule.milestones
+            milestones=self.train_config.optimization_schedule.milestones,
         )
 
         criterion = nn.CrossEntropyLoss()
@@ -41,4 +44,24 @@ class Trainer:
                 loss.backward()
                 optimizer.step()
                 lr_scheduler.step()
-                print(loss)
+            metrics = self.validate(
+                nn_module=nn_module, dataloader=dataloaders["valid"]
+            )
+
+    def validate(
+        self, nn_module: nn.Module, dataloader: torch.utils.data.DataLoader
+    ) -> Dict[str, Dict[str, float]]:
+        nn_module.eval()
+        y_true_all = []
+        y_pred_all = []
+        for batch in tqdm(dataloader, desc="Model evaluation"):
+            y_pred = nn_module(batch["input_ids"], batch["attention_masks"])
+            y_pred = torch.argmax(y_pred, dim=1)
+            y_pred = y_pred.detach().numpy()
+            y_true = batch["targets"].detach().numpy()
+            y_true_all.extend(list(y_true))
+            y_pred_all.extend(list(y_pred))
+        print(classification_report(y_true=y_true_all, y_pred=y_pred_all))
+        return classification_report(
+            y_true=y_true_all, y_pred=y_pred_all, output_dict=True
+        )
