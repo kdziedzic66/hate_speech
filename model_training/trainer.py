@@ -29,3 +29,15 @@ class Trainer:
             gamma=self.train_config.optimization_schedule.gamma,
             milestones=self.train_config.optimization_schedule.milestones
         )
+
+        criterion = nn.CrossEntropyLoss()
+
+        nn_module.train()
+        for epoch_id in range(self.train_config.num_epochs):
+            for iter_id, batch in enumerate(dataloaders["train"]):
+                logits = model(batch["input_ids"], batch["attention_masks"])
+                optimizer.zero_grad()
+                loss = criterion(logits, batch["targets"])
+                loss.backward()
+                optimizer.step()
+                lr_scheduler.step()
