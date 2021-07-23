@@ -4,11 +4,11 @@ from typing import List
 
 @dataclass(repr=False)
 class _OptimizationSchedule:
-    optimizer_name: str = "adam"
+    optimizer_name: str = "adamw"
     num_warmup_steps: int = 100
     init_lr: float = 1e-4
     gamma: float = 1e-1
-    weight_decay: float = 0
+    weight_decay: float = 1e-3
     milestones: List[float] = field(default_factory=lambda: [0.4, 0.7, 0.9])
 
     def __post_init__(self):

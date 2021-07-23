@@ -79,7 +79,7 @@ def reshape_mismatched_shape_tensor(
 def create_optimizer(
     params, optimizer_name: str, init_lr: float, weight_decay: float = 0
 ) -> optim.Optimizer:
-    name_to_optimizer = {"sgd": optim.SGD, "adam": optim.Adam}
+    name_to_optimizer = {"sgd": optim.SGD, "adam": optim.Adam, "adamw": optim.AdamW}
     if optimizer_name not in name_to_optimizer:
         raise ValueError(
             f"Unknown optimizer name. Must be one of {repr(set(name_to_optimizer))}."
