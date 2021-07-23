@@ -77,5 +77,5 @@ class Trainer:
     def _freeze_embedding_layer(self, nn_module: nn.Module):
         if self.train_config.freeze_embeddings:
             embedding_module = nn_module.bert.embeddings
-            for param in embedding_module:
+            for param in embedding_module.parameters():
                 param.requires_grad = False
