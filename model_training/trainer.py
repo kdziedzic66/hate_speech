@@ -40,8 +40,7 @@ class Trainer:
         nn_module.cuda()
         for epoch_id in range(self.train_config.num_epochs):
             for iter_id, batch in tqdm(enumerate(dataloaders["train"]), desc=f"{epoch_id} epoch training in progress"):
-                batch["input_ids"] = batch["input_ids"].to("cuda:0")
-                batch["attention_masks"] = batch["attention_masks"].to("cuda:0")
+                batch = pt_utils.to_device(batch, "cuda:0")
                 logits = nn_module(batch["input_ids"], batch["attention_masks"])
                 optimizer.zero_grad()
                 loss = criterion(logits, batch["targets"])
