@@ -8,8 +8,7 @@ from pipeline_steps.bert_classifier_module import BertHateClassifier
 from pipeline_steps.text_cleaning import TextCleaningComposer
 
 text_cleaner = TextCleaningComposer(
-    # cleaner_names=["EmoticonRemover", "UsernameRemover"]
-    cleaner_names=[]
+    cleaner_names=["EmoticonRemover", "UsernameRemover", "SpecialSignsRemover"]
 )
 
 text_encoder = TextEncoder(max_seq_len=max_seq_len)
