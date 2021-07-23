@@ -3,10 +3,10 @@ from typing import List, Tuple
 
 import torch
 
-from utils.helpers import read_text_file, broadcast_list_to_type, get_repo_root
+from utils.helpers import broadcast_list_to_type, get_repo_root, read_text_file
 
 
-class Dataset(torch.utils.data.Dataset):
+class HateSpeechDataset(torch.utils.data.HateSpeechDataset):
     def __init__(self, data_type: str):
         texts_file = os.path.join(get_repo_root(), f"{data_type}_texts.txt")
         labels_file = os.path.join(get_repo_root(), f"{data_type}_tags.txt")

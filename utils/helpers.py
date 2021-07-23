@@ -2,7 +2,6 @@ import os
 from typing import Any, Dict, List
 
 import git
-
 import numpy as np
 
 
@@ -29,4 +28,3 @@ def get_repo_root() -> str:
     repo = git.Repo(".", search_parent_directories=True)
     repo_root = repo.working_tree_dir
     return repo_root
-

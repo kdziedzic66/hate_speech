@@ -3,6 +3,8 @@ from typing import Callable
 import torch
 from transformers import BertTokenizer
 
+from data.dataset import HateSpeechDataset
+
 
 class DataLoader(torch.utils.data.DataLoader):
     def __init__(
@@ -13,7 +15,7 @@ class DataLoader(torch.utils.data.DataLoader):
         num_workers: int = 1,
         shuffle: bool = True,
     ):
-        dataset = Dataset()
+        dataset = HateSpeechDataset()
         print(len(dataset))
         super(DataLoader, self).__init__(
             dataset=dataset,
