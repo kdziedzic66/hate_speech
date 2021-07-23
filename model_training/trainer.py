@@ -1,3 +1,4 @@
+import os
 from typing import Dict
 
 import torch
@@ -8,6 +9,7 @@ from tqdm import tqdm
 
 import utils.pytorch as pt_utils
 from model_training.config import TrainConfig
+from utils.helpers import get_repo_root
 
 
 class Trainer:
@@ -39,6 +41,7 @@ class Trainer:
 
         nn_module.train()
         nn_module.cuda()
+        self.best_metric = 0.0
         for epoch_id in range(self.train_config.num_epochs):
             for iter_id, batch in tqdm(
                 enumerate(dataloaders["train"]),
@@ -54,6 +57,7 @@ class Trainer:
             metrics = self.validate(
                 nn_module=nn_module, dataloader=dataloaders["valid"]
             )
+            self._save_model(nn_module=nn_module, metrics=metrics)
 
     def validate(
         self, nn_module: nn.Module, dataloader: torch.utils.data.DataLoader
@@ -69,10 +73,23 @@ class Trainer:
             y_true = batch["targets"].detach().cpu().numpy()
             y_true_all.extend(list(y_true))
             y_pred_all.extend(list(y_pred))
+        nn_module.train()
         print(classification_report(y_true=y_true_all, y_pred=y_pred_all))
         return classification_report(
             y_true=y_true_all, y_pred=y_pred_all, output_dict=True
         )
+
+    def _save_model(self, nn_module: nn.Module, metrics: Dict[str, Dict[str, float]]):
+        main_metric_val = metrics["macro avg"][self.train_config.main_metric]
+        if main_metric_val > self.best_metric:
+            nn_module.cpu()
+            output_dir = os.path.join(
+                get_repo_root(), "trained_models", self.train_config.output_model_name
+            )
+            os.makedirs(output_dir, exist_ok=True)
+            torch.save(nn_module.state_dict(), os.path.join(output_dir, "weights.pt"))
+            self.best_metric = main_metric_val
+        nn_module.cuda()
 
     def _freeze_embedding_layer(self, nn_module: nn.Module):
         if self.train_config.freeze_embeddings:

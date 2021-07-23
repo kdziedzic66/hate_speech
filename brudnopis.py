@@ -8,9 +8,7 @@ from pipeline_steps.bert_classifier_module import BertHateClassifier
 from pipeline_steps.text_cleaning import TextCleaningComposer
 from pipeline_steps.text_encoding import TextEncoder
 
-text_cleaner = TextCleaningComposer(
-    cleaner_names=["UsernameRemover"]
-)
+text_cleaner = TextCleaningComposer(cleaner_names=["UsernameRemover"])
 
 model = BertHateClassifier()
 for param in model.parameters():
@@ -18,10 +16,16 @@ for param in model.parameters():
 text_encoder = TextEncoder(max_seq_len=64)
 
 dataloader_train = DataLoader(
-    data_type="train", text_cleaner=text_cleaner, text_encoder=text_encoder, batch_size=32
+    data_type="train",
+    text_cleaner=text_cleaner,
+    text_encoder=text_encoder,
+    batch_size=32,
 )
 dataloader_valid = DataLoader(
-    data_type="valid", text_cleaner=text_cleaner, text_encoder=text_encoder, batch_size=32
+    data_type="valid",
+    text_cleaner=text_cleaner,
+    text_encoder=text_encoder,
+    batch_size=32,
 )
 dataloaders = {"train": dataloader_train, "valid": dataloader_valid}
 
