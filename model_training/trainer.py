@@ -4,7 +4,7 @@ from typing import Dict
 import torch
 import torch.nn as nn
 import transformers
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, f1_score
 from tqdm import tqdm
 
 import utils.pytorch as pt_utils
@@ -74,10 +74,13 @@ class Trainer:
             y_true_all.extend(list(y_true))
             y_pred_all.extend(list(y_pred))
         nn_module.train()
-        print(classification_report(y_true=y_true_all, y_pred=y_pred_all))
-        return classification_report(
+        micro_f1 = f1_score(y_true=y_true_all, y_pred=y_pred_all, average="micro")
+        print(classification_report(y_true=y_true_all, y_pred=y_pred_all) + f"\n micro f1: {micro_f1}")
+        report = classification_report(
             y_true=y_true_all, y_pred=y_pred_all, output_dict=True
         )
+        report["macro_avg"]["micro f1"] = micro_f1
+        return report
 
     def _save_model(self, nn_module: nn.Module, metrics: Dict[str, Dict[str, float]]):
         main_metric_val = metrics["macro avg"][self.train_config.main_metric]
