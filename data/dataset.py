@@ -26,7 +26,7 @@ class HateSpeechDataset(torch.utils.data.Dataset):
         ), "texts and labels should have the same length!"
         texts = map(text_cleaner.clean, texts)
 
-        self.texts = texts
+        self.texts = list(texts)
         self.text_labels = text_labels
 
     def __getitem__(self, idx: int) -> Tuple[str, int]:
