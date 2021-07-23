@@ -6,6 +6,7 @@ from model_training.config import TrainConfig
 from model_training.trainer import Trainer
 from pipeline_steps.bert_classifier_module import BertHateClassifier
 from pipeline_steps.text_cleaning import TextCleaningComposer
+from pipeline_steps.text_encoding import TextEncoder
 
 text_cleaner = TextCleaningComposer(
     cleaner_names=["EmoticonRemover", "UsernameRemover", "SpecialSignsRemover"]
