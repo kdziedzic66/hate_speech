@@ -1,5 +1,5 @@
 POLBERT_PRETRAINED_ID = "dkleczek/bert-base-polish-cased-v1"
-EMOTICON_PATTERN = "u'([\U0001F600-\U0001F64F])'"
+EMOTICON_PATTERN = "[" u"\U0001F600-\U0001F64F" "]+"
 USERNAME = "@anonymized_account"
 NUM_HATE_CLASSES = 3
 
