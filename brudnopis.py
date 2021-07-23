@@ -12,11 +12,13 @@ text_cleaner = TextCleaningComposer(
     cleaner_names=[]
 )
 
+text_encoder = TextEncoder(max_seq_len=max_seq_len)
+
 dataloader_train = DataLoader(
-    data_type="train", text_cleaner=text_cleaner, batch_size=32, max_seq_len=64
+    data_type="train", text_cleaner=text_cleaner, text_encoder=text_encoder, batch_size=32
 )
 dataloader_valid = DataLoader(
-    data_type="valid", text_cleaner=text_cleaner, batch_size=32, max_seq_len=64
+    data_type="valid", text_cleaner=text_cleaner, text_encoder=text_encoder, batch_size=32
 )
 dataloaders = {"train": dataloader_train, "valid": dataloader_valid}
 

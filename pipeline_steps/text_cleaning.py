@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-from utils.constants import EMOTICON_PATTERN, USERNAME
+from utils.constants import EMOTICON_PATTERN, USERNAME_PATTERN, NON_ALPHANUMERIC_PATTERN
 
 
 class BaseTextCleaner:
@@ -17,15 +17,24 @@ class BaseTextCleaner:
 
 class UsernameRemover(BaseTextCleaner):
     def __init__(self):
-        super(UsernameRemover, self).__init__(pattern=USERNAME)
+        super(UsernameRemover, self).__init__(pattern=USERNAME_PATTERN)
 
 
 class EmoticonRemover(BaseTextCleaner):
     def __init__(self):
-        super(EmoticonRemover, self).__init__(pattern=EMOTICON_PATTERN)
+        super(EmoticonRemover, self).__init__(pattern=EMOTICON_PATTERN, unicode=True)
 
 
-REGISTRY = {"EmoticonRemover": EmoticonRemover, "UsernameRemover": UsernameRemover}
+class SpecialSignsRemover(BaseTextCleaner):
+    def __init__(self):
+        super(SpecialSignsRemover, self).__init__(pattern=NON_ALPHANUMERIC_PATTERN)
+
+
+class SpecialSignsRemover(BaseTextCleaner):
+    def __init__(self):
+
+
+REGISTRY = {"EmoticonRemover": EmoticonRemover, "UsernameRemover": UsernameRemover, "SpecialSignsRemover": SpecialSignsRemover}
 
 
 class TextCleaningComposer:

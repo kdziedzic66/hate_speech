@@ -13,13 +13,12 @@ class DataLoader(torch.utils.data.DataLoader):
         self,
         data_type: str,
         text_cleaner: TextCleaningComposer,
+        text_encoder: TextEncoder,
         batch_size: int,
-        max_seq_len: int,
         num_workers: int = 1,
         shuffle: bool = True,
     ):
         dataset = HateSpeechDataset(data_type=data_type, text_cleaner=text_cleaner)
-        text_encoder = TextEncoder(max_seq_len=max_seq_len)
         super(DataLoader, self).__init__(
             dataset=dataset,
             collate_fn=_collate_fn(text_encoder=text_encoder),
