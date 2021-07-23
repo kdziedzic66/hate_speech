@@ -30,10 +30,6 @@ class SpecialSignsRemover(BaseTextCleaner):
         super(SpecialSignsRemover, self).__init__(pattern=NON_ALPHANUMERIC_PATTERN)
 
 
-class SpecialSignsRemover(BaseTextCleaner):
-    def __init__(self):
-
-
 REGISTRY = {"EmoticonRemover": EmoticonRemover, "UsernameRemover": UsernameRemover, "SpecialSignsRemover": SpecialSignsRemover}
 
 
