@@ -21,7 +21,10 @@ class Trainer:
     ):
         assert "train" in dataloaders, "No train dataset specified!"
         assert "valid" in dataloaders, "No valid dataset specified!"
+        assert "test" in dataloaders, "No test dataset specified!"
         assert torch.cuda.is_available(), "Only GPU training is supported!"
+
+        self.dataloaders = dataloaders
 
         self._freeze_embedding_layer(nn_module=nn_module)
         optimizer = pt_utils.create_optimizer(
@@ -44,7 +47,7 @@ class Trainer:
         self.best_metric = 0.0
         for epoch_id in range(self.train_config.num_epochs):
             for iter_id, batch in tqdm(
-                enumerate(dataloaders["train"]),
+                enumerate(self.dataloaders["train"]),
                 desc=f"{epoch_id} epoch training in progress",
             ):
                 batch = pt_utils.to_device(batch, "cuda:0")
@@ -54,18 +57,16 @@ class Trainer:
                 loss.backward()
                 optimizer.step()
                 lr_scheduler.step()
-            valid_metrics = self.validate(
-                nn_module=nn_module, dataloader=dataloaders["valid"]
-            )
+            valid_metrics = self.eval(nn_module=nn_module, data_type="valid")
             self._save_model(nn_module=nn_module, metrics=valid_metrics)
 
-    def validate(
-        self, nn_module: nn.Module, dataloader: torch.utils.data.DataLoader
-    ) -> Dict[str, Dict[str, float]]:
+    def eval(self, nn_module: nn.Module, data_type: str) -> Dict[str, Dict[str, float]]:
         nn_module.eval()
         y_true_all = []
         y_pred_all = []
-        for batch in tqdm(dataloader, desc="Model evaluation"):
+        for batch in tqdm(
+            self.dataloaders[data_type], desc=f"Model evaluation on {data_type}"
+        ):
             batch = pt_utils.to_device(batch, "cuda:0")
             y_pred = nn_module(batch["input_ids"], batch["attention_masks"])
             y_pred = torch.argmax(y_pred, dim=1)
@@ -75,7 +76,11 @@ class Trainer:
             y_pred_all.extend(list(y_pred))
         nn_module.train()
         micro_f1 = f1_score(y_true=y_true_all, y_pred=y_pred_all, average="micro")
-        print(classification_report(y_true=y_true_all, y_pred=y_pred_all) + f"\n micro f1: {micro_f1}")
+        print(
+            f"validation results fpr {data_type}\n\n\n"
+            + classification_report(y_true=y_true_all, y_pred=y_pred_all)
+            + f"\n micro f1: {micro_f1}"
+        )
         report = classification_report(
             y_true=y_true_all, y_pred=y_pred_all, output_dict=True
         )
@@ -92,7 +97,9 @@ class Trainer:
             os.makedirs(output_dir, exist_ok=True)
             torch.save(nn_module.state_dict(), os.path.join(output_dir, "weights.pt"))
             self.best_metric = main_metric_val
-        nn_module.cuda()
+            nn_module.cuda()
+            test_metrics = self.eval(nn_module=nn_module, data_type="test")
+            train_metrics = self.eval(nn_module=nn_module, data_type="train")
 
     def _freeze_embedding_layer(self, nn_module: nn.Module):
         if self.train_config.freeze_embeddings:

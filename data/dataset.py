@@ -1,6 +1,6 @@
 import os
 from collections import Counter
-from typing import List, Tuple
+from typing import Tuple
 
 import numpy as np
 import torch

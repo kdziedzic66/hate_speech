@@ -10,9 +10,6 @@ from pipeline_steps.text_encoding import TextEncoder
 
 text_cleaner = TextCleaningComposer(cleaner_names=["UsernameRemover"])
 
-model = BertHateClassifier()
-for param in model.parameters():
-    a = "dupa"
 text_encoder = TextEncoder(max_seq_len=64)
 
 dataloader_train = DataLoader(
@@ -20,7 +17,7 @@ dataloader_train = DataLoader(
     text_cleaner=text_cleaner,
     text_encoder=text_encoder,
     batch_size=32,
-    class_balanced_sampling=True
+    class_balanced_sampling=True,
 )
 dataloader_valid = DataLoader(
     data_type="valid",
@@ -28,7 +25,13 @@ dataloader_valid = DataLoader(
     text_encoder=text_encoder,
     batch_size=32,
 )
-dataloaders = {"train": dataloader_train, "valid": dataloader_valid}
+dataloader_test = DataLoader(
+    data_type="test",
+    text_cleaner=text_cleaner,
+    text_encoder=text_encoder,
+    batch_size=32,
+)
+dataloaders = {"train": dataloader_train, "valid": dataloader_valid, "test": dataloader_test}
 
 model = BertHateClassifier()
 train_config = {"batch_size": 32, "num_epochs": 50}
