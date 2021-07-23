@@ -25,7 +25,7 @@ class EmoticonRemover(BaseTextCleaner):
         super(EmoticonRemover, self).__init__(pattern=EMOTICON_PATTERN)
 
 
-REGISTRY = {"EmotIconRemover": EmoticonRemover, "UsernameRemover": UsernameRemover}
+REGISTRY = {"EmoticonRemover": EmoticonRemover, "UsernameRemover": UsernameRemover}
 
 
 class TextCleaningComposer:
