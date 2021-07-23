@@ -2,6 +2,7 @@ from typing import Dict
 
 import torch
 import torch.nn as nn
+import transformers
 from sklearn.metrics import classification_report
 from tqdm import tqdm
 
@@ -27,11 +28,16 @@ class Trainer:
             weight_decay=self.train_config.optimization_schedule.weight_decay,
         )
 
-        lr_scheduler = pt_utils.create_lr_scheduler(
+        # lr_scheduler = pt_utils.create_lr_scheduler(
+        #     optimizer=optimizer,
+        #     num_iterations=len(dataloaders["train"]) * self.train_config.num_epochs,
+        #     gamma=self.train_config.optimization_schedule.gamma,
+        #     milestones=self.train_config.optimization_schedule.milestones,
+        # )
+        lr_scheduler = transformers.get_linear_schedule_with_warmup(
             optimizer=optimizer,
-            num_iterations=len(dataloaders["train"]) * self.train_config.num_epochs,
-            gamma=self.train_config.optimization_schedule.gamma,
-            milestones=self.train_config.optimization_schedule.milestones,
+            num_warmup_steps=self.train_config.optimization_schedule.num_warmup_steps,
+            num_training_steps=len(dataloaders["train"]) * self.train_config.num_epochs,
         )
 
         criterion = nn.CrossEntropyLoss()
@@ -39,7 +45,10 @@ class Trainer:
         nn_module.train()
         nn_module.cuda()
         for epoch_id in range(self.train_config.num_epochs):
-            for iter_id, batch in tqdm(enumerate(dataloaders["train"]), desc=f"{epoch_id} epoch training in progress"):
+            for iter_id, batch in tqdm(
+                enumerate(dataloaders["train"]),
+                desc=f"{epoch_id} epoch training in progress",
+            ):
                 batch = pt_utils.to_device(batch, "cuda:0")
                 logits = nn_module(batch["input_ids"], batch["attention_masks"])
                 optimizer.zero_grad()

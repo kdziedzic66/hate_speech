@@ -5,6 +5,7 @@ from typing import List
 @dataclass(repr=False)
 class _OptimizationSchedule:
     optimizer_name: str = "adam"
+    num_warmup_steps: int = 100
     init_lr: float = 1e-4
     gamma: float = 1e-1
     weight_decay: float = 0
