@@ -6,10 +6,10 @@ import torch
 from utils.helpers import broadcast_list_to_type, get_repo_root, read_text_file
 
 
-class HateSpeechDataset(torch.utils.data.HateSpeechDataset):
+class HateSpeechDataset(torch.utils.data.Dataset):
     def __init__(self, data_type: str):
-        texts_file = os.path.join(get_repo_root(), f"{data_type}_texts.txt")
-        labels_file = os.path.join(get_repo_root(), f"{data_type}_tags.txt")
+        texts_file = os.path.join(get_repo_root(), "datafiles", f"{data_type}_texts.txt")
+        labels_file = os.path.join(get_repo_root(), "datafiles", f"{data_type}_tags.txt")
 
         assert os.path.isfile(texts_file), "Text file does not exist!"
         assert os.path.isfile(labels_file), "Label file does not exist!"
@@ -25,7 +25,7 @@ class HateSpeechDataset(torch.utils.data.HateSpeechDataset):
 
     def __getitem__(self, idx: int) -> Tuple[str, int]:
         text = self.texts[idx]
-        label = self.labels[idx]
+        label = self.text_labels[idx]
         return text, label
 
     def __len__(self) -> int:

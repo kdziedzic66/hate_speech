@@ -1,5 +1,6 @@
-from typing import Callable
+from typing import Callable, Dict, List, Tuple
 
+import numpy as np
 import torch
 from transformers import BertTokenizer
 
@@ -9,14 +10,14 @@ from data.dataset import HateSpeechDataset
 class DataLoader(torch.utils.data.DataLoader):
     def __init__(
         self,
+        data_type: str,
         batch_size: int,
         tokenizer: BertTokenizer,
         max_seq_len: int,
         num_workers: int = 1,
         shuffle: bool = True,
     ):
-        dataset = HateSpeechDataset()
-        print(len(dataset))
+        dataset = HateSpeechDataset(data_type=data_type)
         super(DataLoader, self).__init__(
             dataset=dataset,
             collate_fn=_collate_fn(tokenizer=tokenizer, max_seq_len=max_seq_len),
@@ -28,7 +29,7 @@ class DataLoader(torch.utils.data.DataLoader):
 
 
 def _collate_fn(tokenizer: BertTokenizer, max_seq_len: int) -> Callable:
-    def _make_batch(datapoints) -> dict:
+    def _make_batch(datapoints: List[Tuple[str, int]]) -> Dict[str, torch.Tensor]:
         attention_masks = []
         input_ids = []
         labels = []
@@ -47,8 +48,8 @@ def _collate_fn(tokenizer: BertTokenizer, max_seq_len: int) -> Callable:
             input_ids.append(encoding["input_ids"])
             labels.append(label)
         batch = {
-            "input_ids": torch.cat(input_ids, axis=0),
-            "attention_masks": torch.cat(attention_masks, axis=0),
+            "input_ids": torch.cat(input_ids, dim=0),
+            "attention_masks": torch.cat(attention_masks, dim=0),
             "targets": torch.from_numpy(np.array(labels)),
         }
         return batch
