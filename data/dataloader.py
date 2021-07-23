@@ -23,6 +23,7 @@ class DataLoader(torch.utils.data.DataLoader):
         sampler = None
         if class_balanced_sampling:
             sampler = dataset.get_class_balanced_sampler()
+            shuffle = False
         super(DataLoader, self).__init__(
             dataset=dataset,
             collate_fn=_collate_fn(text_encoder=text_encoder),
