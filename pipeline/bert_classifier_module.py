@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from transformers import BertModel
 
-from utils.constants import POLBERT_PRETRAINED_ID, NUM_HATE_CLASSES
+from utils.constants import NUM_HATE_CLASSES, POLBERT_PRETRAINED_ID
 
 
 class BertHateClassifier(nn.Module):
