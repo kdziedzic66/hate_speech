@@ -8,7 +8,8 @@ from pipeline_steps.bert_classifier_module import BertHateClassifier
 from pipeline_steps.text_cleaning import TextCleaningComposer
 
 text_cleaner = TextCleaningComposer(
-    cleaner_names=["EmoticonRemover", "UsernameRemover"]
+    # cleaner_names=["EmoticonRemover", "UsernameRemover"]
+    cleaner_names=[]
 )
 
 dataloader_train = DataLoader(

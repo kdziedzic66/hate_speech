@@ -28,12 +28,6 @@ class Trainer:
             weight_decay=self.train_config.optimization_schedule.weight_decay,
         )
 
-        # lr_scheduler = pt_utils.create_lr_scheduler(
-        #     optimizer=optimizer,
-        #     num_iterations=len(dataloaders["train"]) * self.train_config.num_epochs,
-        #     gamma=self.train_config.optimization_schedule.gamma,
-        #     milestones=self.train_config.optimization_schedule.milestones,
-        # )
         lr_scheduler = transformers.get_linear_schedule_with_warmup(
             optimizer=optimizer,
             num_warmup_steps=self.train_config.optimization_schedule.num_warmup_steps,
