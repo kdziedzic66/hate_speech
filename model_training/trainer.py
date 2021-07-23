@@ -79,7 +79,7 @@ class Trainer:
         report = classification_report(
             y_true=y_true_all, y_pred=y_pred_all, output_dict=True
         )
-        report["macro_avg"]["micro f1"] = micro_f1
+        report["macro avg"]["micro f1"] = micro_f1
         return report
 
     def _save_model(self, nn_module: nn.Module, metrics: Dict[str, Dict[str, float]]):
