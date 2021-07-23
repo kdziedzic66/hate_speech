@@ -12,7 +12,7 @@ text_cleaner = TextCleaningComposer(
     cleaner_names=["EmoticonRemover", "UsernameRemover", "SpecialSignsRemover"]
 )
 
-text_encoder = TextEncoder(max_seq_len=max_seq_len)
+text_encoder = TextEncoder(max_seq_len=64)
 
 dataloader_train = DataLoader(
     data_type="train", text_cleaner=text_cleaner, text_encoder=text_encoder, batch_size=32
