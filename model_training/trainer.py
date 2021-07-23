@@ -21,6 +21,7 @@ class Trainer:
         assert "valid" in dataloaders, "No valid dataset specified!"
         assert torch.cuda.is_available(), "Only GPU training is supported!"
 
+        self._freeze_embedding_layer(nn_module=nn_module)
         optimizer = pt_utils.create_optimizer(
             params=nn_module.parameters(),
             optimizer_name=self.train_config.optimization_schedule.optimizer_name,
@@ -72,3 +73,9 @@ class Trainer:
         return classification_report(
             y_true=y_true_all, y_pred=y_pred_all, output_dict=True
         )
+
+    def _freeze_embedding_layer(self, nn_module: nn.Module):
+        if self.train_config.freeze_embeddings:
+            embedding_module = nn_module.bert.embeddings
+            for param in embedding_module:
+                param.requires_grad = False

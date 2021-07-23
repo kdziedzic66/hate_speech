@@ -23,6 +23,7 @@ class _OptimizationSchedule:
 class TrainConfig:
     batch_size: int
     num_epochs: int
+    freeze_embeddings: bool = True
     optimization_schedule: _OptimizationSchedule = field(
         default_factory=_OptimizationSchedule
     )

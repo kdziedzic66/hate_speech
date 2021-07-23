@@ -9,9 +9,12 @@ from pipeline_steps.text_cleaning import TextCleaningComposer
 from pipeline_steps.text_encoding import TextEncoder
 
 text_cleaner = TextCleaningComposer(
-    cleaner_names=["EmoticonRemover", "UsernameRemover", "SpecialSignsRemover"]
+    cleaner_names=["UsernameRemover"]
 )
 
+model = BertHateClassifier()
+for param in model.parameters():
+    a = "dupa"
 text_encoder = TextEncoder(max_seq_len=64)
 
 dataloader_train = DataLoader(
