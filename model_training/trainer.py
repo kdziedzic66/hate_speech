@@ -54,10 +54,10 @@ class Trainer:
                 loss.backward()
                 optimizer.step()
                 lr_scheduler.step()
-            metrics = self.validate(
+            valid_metrics = self.validate(
                 nn_module=nn_module, dataloader=dataloaders["valid"]
             )
-            self._save_model(nn_module=nn_module, metrics=metrics)
+            self._save_model(nn_module=nn_module, metrics=valid_metrics)
 
     def validate(
         self, nn_module: nn.Module, dataloader: torch.utils.data.DataLoader
