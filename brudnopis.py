@@ -23,7 +23,7 @@ dataloader_valid = DataLoader(
 dataloaders = {"train": dataloader_train, "valid": dataloader_valid}
 
 model = BertHateClassifier()
-train_config = {"batch_size": 32, "num_epochs": 2}
+train_config = {"batch_size": 32, "num_epochs": 50}
 train_config = dacite.from_dict(TrainConfig, train_config)
 trainer = Trainer(train_config=train_config)
 trainer.train(model, dataloaders)
