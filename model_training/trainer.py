@@ -18,6 +18,7 @@ class Trainer:
     ):
         assert "train" in dataloaders, "No train dataset specified!"
         assert "valid" in dataloaders, "No valid dataset specified!"
+        assert torch.cuda.is_available(), "Only GPU training is supported!"
 
         optimizer = pt_utils.create_optimizer(
             params=nn_module.parameters(),
@@ -36,8 +37,11 @@ class Trainer:
         criterion = nn.CrossEntropyLoss()
 
         nn_module.train()
+        nn_module.cuda()
         for epoch_id in range(self.train_config.num_epochs):
-            for iter_id, batch in enumerate(dataloaders["train"]):
+            for iter_id, batch in tqdm(enumerate(dataloaders["train"]), desc=f"{epoch_id} epoch training in progress"):
+                batch["input_ids"] = batch["input_ids"].to("cuda:0")
+                batch["attention_masks"] = batch["attention_masks"].to("cuda:0")
                 logits = nn_module(batch["input_ids"], batch["attention_masks"])
                 optimizer.zero_grad()
                 loss = criterion(logits, batch["targets"])
@@ -57,8 +61,8 @@ class Trainer:
         for batch in tqdm(dataloader, desc="Model evaluation"):
             y_pred = nn_module(batch["input_ids"], batch["attention_masks"])
             y_pred = torch.argmax(y_pred, dim=1)
-            y_pred = y_pred.detach().numpy()
-            y_true = batch["targets"].detach().numpy()
+            y_pred = y_pred.detach().cpu().numpy()
+            y_true = batch["targets"].detach().cpu().numpy()
             y_true_all.extend(list(y_true))
             y_pred_all.extend(list(y_pred))
         print(classification_report(y_true=y_true_all, y_pred=y_pred_all))
