@@ -20,6 +20,7 @@ dataloader_train = DataLoader(
     text_cleaner=text_cleaner,
     text_encoder=text_encoder,
     batch_size=32,
+    class_balanced_sampling=True
 )
 dataloader_valid = DataLoader(
     data_type="valid",

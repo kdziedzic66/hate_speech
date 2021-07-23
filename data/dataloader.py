@@ -17,11 +17,16 @@ class DataLoader(torch.utils.data.DataLoader):
         batch_size: int,
         num_workers: int = 1,
         shuffle: bool = True,
+        class_balanced_sampling: bool = False,
     ):
         dataset = HateSpeechDataset(data_type=data_type, text_cleaner=text_cleaner)
+        sampler = None
+        if class_balanced_sampling:
+            sampler = dataset.get_class_balanced_sampler()
         super(DataLoader, self).__init__(
             dataset=dataset,
             collate_fn=_collate_fn(text_encoder=text_encoder),
+            sampler=sampler,
             batch_size=batch_size,
             num_workers=num_workers,
             shuffle=shuffle,

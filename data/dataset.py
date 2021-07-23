@@ -1,6 +1,8 @@
 import os
+from collections import Counter
 from typing import List, Tuple
 
+import numpy as np
 import torch
 
 from pipeline_steps.text_cleaning import TextCleaningComposer
@@ -36,3 +38,20 @@ class HateSpeechDataset(torch.utils.data.Dataset):
 
     def __len__(self) -> int:
         return len(self.texts)
+
+    def get_class_balanced_sampler(self) -> torch.utils.data.WeightedRandomSampler:
+        classnames_cnt = Counter(self.text_labels)
+        class_weights = {}
+        for classname, count in classnames_cnt.items():
+            class_weights[classname] = 1.0 / np.log1p(count)
+        min_class_weight_value = min(class_weights.values())
+        for classname, weight in class_weights.items():
+            class_weights[classname] = weight / min_class_weight_value
+        print(f"sampler class weights = {class_weights}")
+        sample_weights = [class_weights[label] for label in self.text_labels]
+        sampler = torch.utils.data.WeightedRandomSampler(
+            weights=sample_weights,
+            num_samples=len(sample_weights),
+            replacement=True,
+        )
+        return sampler
