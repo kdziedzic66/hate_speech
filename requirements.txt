@@ -3,4 +3,6 @@ torch==1.9.0
 sentencepiece==0.1.96
 GitPython==3.1.19
 scikit-learn==0.24.2
+dacite==1.6.0
+
 
