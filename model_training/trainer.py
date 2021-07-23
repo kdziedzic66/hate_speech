@@ -58,6 +58,7 @@ class Trainer:
         y_true_all = []
         y_pred_all = []
         for batch in tqdm(dataloader, desc="Model evaluation"):
+            batch = pt_utils.to_device(batch, "cuda:0")
             y_pred = nn_module(batch["input_ids"], batch["attention_masks"])
             y_pred = torch.argmax(y_pred, dim=1)
             y_pred = y_pred.detach().cpu().numpy()
