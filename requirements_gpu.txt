@@ -5,3 +5,4 @@ GitPython==3.1.19
 scikit-learn==0.24.2
 dacite==1.6.0
 flask==2.0.1
+wget==3.2
