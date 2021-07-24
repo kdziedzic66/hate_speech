@@ -9,7 +9,7 @@ from pipeline import Pipeline
 text_cleaner = ["UsernameRemover"]
 
 pipeline_config = {"text_cleaners": text_cleaner}
-train_config = {"batch_size": 32, "num_epochs": 10}
+train_config = {"batch_size": 32, "num_epochs": 1}
 
 pipeline_config = dacite.from_dict(PipelineConfig, pipeline_config)
 train_config = dacite.from_dict(TrainConfig, train_config)
