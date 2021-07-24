@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Any, Dict, List
 
@@ -28,3 +29,14 @@ def get_repo_root() -> str:
     repo = git.Repo(".", search_parent_directories=True)
     repo_root = repo.working_tree_dir
     return repo_root
+
+
+def save_json(data: Any, filepath: str):
+    with open(filepath, "w") as f:
+        json.dump(data, filepath, indent=4)
+
+
+def load_json(filepath: str) -> Any:
+    with open(filepath) as f:
+        data = json.load(filepath)
+    return data

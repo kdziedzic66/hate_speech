@@ -26,6 +26,7 @@ class TrainConfig:
     main_metric: str = "f1-score"
     output_model_name: str = "bert_for_hatespeech"
     freeze_embeddings: bool = True
+    class_balanced_sampling: bool = True
     optimization_schedule: _OptimizationSchedule = field(
         default_factory=_OptimizationSchedule
     )
