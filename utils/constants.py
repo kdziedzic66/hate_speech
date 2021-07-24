@@ -2,6 +2,7 @@ POLBERT_PRETRAINED_ID = "dkleczek/bert-base-polish-cased-v1"
 EMOTICON_PATTERN = "[" u"\U0001F600-\U0001F64F" "]+"
 NON_ALPHANUMERIC_PATTERN = "\W+"
 USERNAME_PATTERN = "@[\w]+"
+PRODUCTION_MODEL_NAME = "bert_for_hatespeech"
 NUM_HATE_CLASSES = 3
 
 

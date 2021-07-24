@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict, List
 
 import git
-import numpy as np
+import wget
 
 
 def read_text_file(filepath: str) -> List[str]:
@@ -40,3 +40,13 @@ def load_json(filepath: str) -> Any:
     with open(filepath) as f:
         data = json.load(f)
     return data
+
+
+def download_model_from_s3(model_name: str):
+    weights_url = (
+        f"https://hatespeechml.s3.eu-central-1.amazonaws.com/{model_name}/weights.pt"
+    )
+    config_url = f"https://hatespeechml.s3.eu-central-1.amazonaws.com/{model_name}/pipeline_config.json"
+    output_dir = os.path.join(get_repo_root(), "trained_models", model_name)
+    _ = wget.download(weights_url, out=output_dir)
+    _ = wget.download(config_url, out=output_dir)

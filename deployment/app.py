@@ -4,8 +4,11 @@ from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, jsonify, request
 
 from pipeline import Pipeline
+from utils.constants import PRODUCTION_MODEL_NAME
+from utils.helpers import download_model_from_s3
 
-PIPELINE = Pipeline.from_model_id("bert_for_hatespeech")
+download_model_from_s3(model_name=PRODUCTION_MODEL_NAME)
+PIPELINE = Pipeline.from_model_id(PRODUCTION_MODEL_NAME)
 EXECUTOR = ThreadPoolExecutor(max_workers=1)
 
 
