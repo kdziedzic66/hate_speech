@@ -62,7 +62,7 @@ class Pipeline:
         confidence = prediction_softmax[0][prediction_class_id]
         prediction = {
             "harmfulness": CLASS_NAME_MAPPING[prediction_class_id],
-            "confidence": confidence,
+            "confidence": float(confidence),
         }
         return prediction
 

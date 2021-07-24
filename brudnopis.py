@@ -1,10 +1,8 @@
 import dacite
 
 from model_training.config import TrainConfig
-from pipeline_config import PipelineConfig
 from pipeline import Pipeline
-
-
+from pipeline_config import PipelineConfig
 
 text_cleaner = ["UsernameRemover"]
 
@@ -16,6 +14,3 @@ train_config = dacite.from_dict(TrainConfig, train_config)
 
 pipeline = Pipeline(pipeline_config=pipeline_config)
 pipeline.train(train_config=train_config)
-
-
-
