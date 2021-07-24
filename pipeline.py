@@ -57,8 +57,8 @@ class Pipeline:
             text_encoding["input_ids"], text_encoding["attention_mask"]
         )
         prediction_softmax = nn.Softmax(dim=1)(prediction_logits)
-        prediction_softmax = predictions.detach().numpy()
-        prediction_class_id = np.argmax(predictions, axis=1)
+        prediction_softmax = prediction_softmax.detach().numpy()
+        prediction_class_id = np.argmax(prediction_softmax, axis=1)[0]
         confidence = prediction_softmax[0][prediction_class_id]
         prediction = {
             "harmfulness": CLASS_NAME_MAPPING[prediction_class_id],
