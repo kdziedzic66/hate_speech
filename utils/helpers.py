@@ -33,10 +33,10 @@ def get_repo_root() -> str:
 
 def save_json(data: Any, filepath: str):
     with open(filepath, "w") as f:
-        json.dump(data, filepath, indent=4)
+        json.dump(data, f, indent=4)
 
 
 def load_json(filepath: str) -> Any:
     with open(filepath) as f:
-        data = json.load(filepath)
+        data = json.load(f)
     return data
