@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service
+spec:
+  selector:
+    matchLabels:
+      app: hatespeech
+  replicas: 3
+  minReadySeconds: 360
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: hatespeech
+    spec:
+      containers:
+        - image: kdziedzic66/hatespeech
+          imagePullPolicy: Always
+          name: hatespeech
+          ports:
+            - containerPort: 5000
