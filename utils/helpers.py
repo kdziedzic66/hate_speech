@@ -48,5 +48,7 @@ def download_model_from_s3(model_name: str):
     )
     config_url = f"https://hatespeechml.s3.eu-central-1.amazonaws.com/{model_name}/pipeline_config.json"
     output_dir = os.path.join(get_repo_root(), "trained_models", model_name)
+    if not os.path.isdir(output_dir):
+        os.makedirs(output_dir)
     _ = wget.download(weights_url, out=output_dir)
     _ = wget.download(config_url, out=output_dir)
