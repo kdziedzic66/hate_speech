@@ -28,6 +28,8 @@ It is preassumed that you have docker, minikube and kubectl installed.
 - Push the image:
     `docker push kdziedzic66/hatespeech`
   
+- Start Minikube cluster: `minikube start`
+  
 - Create deployment using `deployment.yaml` file:
     `kubectl create -f deployment.yaml`
   To check the status of the deployment run: `kubectl rollout status deployment service`
