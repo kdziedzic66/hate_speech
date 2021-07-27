@@ -98,6 +98,8 @@ class Trainer:
             torch.save(nn_module.state_dict(), os.path.join(output_dir, "weights.pt"))
             self.best_metric = main_metric_val
             nn_module.cuda()
+            _ = self.eval(nn_module=nn_module, data_type="test")
+            _ = self.eval(nn_module=nn_module, data_type="train")
 
     def _freeze_embedding_layer(self, nn_module: nn.Module):
         if self.train_config.freeze_embeddings:
